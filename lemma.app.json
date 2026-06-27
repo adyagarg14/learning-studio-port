@@ -1,0 +1,34 @@
+{
+  "name": "learning-studio-port",
+  "title": "Learning Studio",
+  "template": "lemma-vite",
+  "podId": "019efe5e-b261-76be-8124-a686c1d07311",
+  "stylePreset": "soft",
+  "preferredStylePresets": [
+    "neobrutal",
+    "editorial",
+    "soft",
+    "terminal"
+  ],
+  "runtime": {
+    "apiUrl": "https://api.lemma.work",
+    "authUrl": "https://lemma.work/auth",
+    "appBasePath": "/"
+  },
+  "legacyInitHints": {
+    "navigation": "sidebar",
+    "agentName": null,
+    "chatMode": "right-sidebar",
+    "members": false,
+    "search": null,
+    "themeToggle": true
+  },
+  "aiEditingContract": {
+    "primaryInstruction": "Build the app as a native React app. Replace sample feature routes and data with the real operator workflow.",
+    "avoid": [
+      "Do not preserve sample dashboard/tasks/users/chats/apps pages unless they match the workflow.",
+      "Do not add registry blocks or generated registry structure.",
+      "Do not make a landing page; the first screen should start with work."
+    ]
+  }
+}

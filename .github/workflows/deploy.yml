@@ -1,0 +1,43 @@
+name: Deploy Learning Studio to Lemma
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      NPM_CONFIG_CACHE: /tmp/.npm
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Lemma CLI
+        # Install the CLI into a scratch directory and add it to PATH.
+        # Pinning to a narrow version range keeps CI deterministic.
+        run: |
+          mkdir -p .lemma-cli && cd .lemma-cli && \
+            npm init -y >/dev/null && \
+            npm install lemma-cli --no-audit --no-fund
+          echo "$PWD/.lemma-cli/node_modules/.bin" >>"$GITHUB_PATH"
+
+      - name: Deploy to Lemma
+        env:
+          LEMMA_TOKEN: ${{ secrets.LEMMA_TOKEN }}
+          POD_ID: ${{ secrets.POD_ID }}
+          APP_NAME: learning-studio-port
+        run: lemma apps deploy "$APP_NAME" --token "$LEMMA_TOKEN" --pod "$POD_ID" -y
